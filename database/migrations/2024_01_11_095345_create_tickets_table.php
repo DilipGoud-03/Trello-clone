@@ -21,8 +21,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('stage_id')->references('id')->on('stages')->onDelete('cascade');
-            $table->foreign('assignee')->references('id')->on('user__invites')->onDelete('cascade');
-            $table->foreign('created_by')->references('id')->on('user__invites')->onDelete('cascade');
+            $table->foreign('assignee')->references('id')->on('user_invites')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('user_invites')->onDelete('cascade');
         });
     }
 

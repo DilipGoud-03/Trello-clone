@@ -10,6 +10,7 @@ class User_Invites extends Model
     use HasFactory;
     protected $fillable = ([
         'user_id',
+        'board_id',
         'role',
         'status',
         'invited_by'

@@ -10,7 +10,8 @@ class Comments extends Model
     use HasFactory;
 
     protected $fillable = ([
-
+        'user_id',
+        'ticket_id',
         'comment'
     ]);
     public function InviteUser()

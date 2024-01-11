@@ -10,9 +10,11 @@ class Tickets extends Model
     use HasFactory;
 
     protected $fillable = ([
-        "name",
-        "description",
-        "Assignee"
+        'stage_id',
+        'name',
+        'description',
+        'Assignee',
+        'created_by'
     ]);
     public function Comments()
     {

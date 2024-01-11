@@ -10,6 +10,8 @@ class Ticket_Attachment extends Model
     use HasFactory;
 
     protected $fillable = ([
+        'ticket_id',
+        'comment_id',
         'name',
         'path',
         'type'

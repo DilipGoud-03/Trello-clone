@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('ticket_attachments', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned()->index()->nullable();
             $table->bigInteger('tickets_id')->unsigned()->index()->nullable();
-            $table->string('comment');
+            $table->bigInteger('comment_id')->unsigned()->index()->nullable();
+            $table->string('name');
+            $table->string('path');
+            $table->string('type');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('user__invites')->onDelete('cascade');
             $table->foreign('tickets_id')->references('id')->on('tickets')->onDelete('cascade');
+            $table->foreign('comment_id')->references('id')->on('tickets_comments')->onDelete('cascade');
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('ticket_attachments');
     }
 };

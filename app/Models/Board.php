@@ -10,7 +10,8 @@ class Board extends Model
     use HasFactory;
     protected $fillable = ([
         'name',
-        'description'
+        'description',
+        'created_by'
     ]);
     function User()
     {

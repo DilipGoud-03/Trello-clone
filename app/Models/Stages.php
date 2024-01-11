@@ -10,8 +10,10 @@ class Stages extends Model
     use HasFactory;
 
     protected $fillable = ([
+        'board_id',
         'name',
         'sequence',
+        'is_default',
         'created_by'
     ]);
 

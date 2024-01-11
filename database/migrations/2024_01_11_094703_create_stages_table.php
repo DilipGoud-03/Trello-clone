@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('board_id')->references('id')->on('boards')->onDelete('cascade');
-            $table->foreign('created_by')->references('id')->on('user__invites')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('user_invites')->onDelete('cascade');
         });
     }
 
