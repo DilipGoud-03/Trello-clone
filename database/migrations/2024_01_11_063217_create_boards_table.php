@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('boards', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('created_by')->unsigned()->index()->nullable();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
             $table->longText('description');
+            $table->bigInteger('created_by')->unsigned()->index()->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -21,8 +21,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-
-
     ];
 
     /**
@@ -42,10 +40,17 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     function Board()
     {
         return $this->hasMany(Board::class, 'created_by');
     }
+
     function InviteUser()
     {
         return $this->hasMany(User_Invites::class, 'invited_by');
