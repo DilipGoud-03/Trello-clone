@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_invites', function (Blueprint $table) {
+        Schema::create('userinvites', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned()->index()->nullable();
-            $table->bigInteger('board_id')->unsigned()->index()->nullable();
-            $table->string('role');
-            $table->tinyInteger('status')->default(0);
-            $table->bigInteger('invited_by')->unsigned()->index()->nullable();
+            $table->bigInteger('user_id')->unsigned()->index();
+            $table->bigInteger('board_id')->unsigned()->index();
+            $table->enum('role', ['Manager', 'Project Manager', 'Developer']);
+            $table->enum('status', ['Panding', 'Rejected', 'Accepted']);
+            $table->bigInteger('invited_by')->unsigned()->index();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_invites');
+        Schema::dropIfExists('userinvites');
     }
 };

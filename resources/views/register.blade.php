@@ -11,7 +11,7 @@
             Register Here
         </div>
         <div class="card-body">
-            <form action="{{route('loginrequest')}}" method="post">
+            <form action="{{route('store')}}" method="post">
                 @csrf
                 <div class="mt-1 mb-6 row ">
                     <label for="name" class="form-label">Name</label>

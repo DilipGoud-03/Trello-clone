@@ -40,19 +40,30 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+    // Relationships
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    function Board()
+    public function board()
     {
-        return $this->hasMany(Board::class, 'created_by');
+        return $this->hasMany(Board::class);
     }
 
-    function InviteUser()
+    public function userInvite()
     {
-        return $this->hasMany(User_Invites::class, 'invited_by');
+        return $this->hasMany(UserInvite::class);
+    }
+
+    public function stage()
+    {
+        return $this->hasMany(Stage::class, 'created_by');
+    }
+
+    public function ticket()
+    {
+        return $this->hasMany(Ticket::class, 'created_by');
+    }
+
+    public function comment()
+    {
+        return $this->hasMany(TicketComment::class, 'created_by');
     }
 }

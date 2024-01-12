@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ticket_Attachment extends Model
+class TicketAttachment extends Model
 {
     use HasFactory;
 
@@ -17,8 +17,14 @@ class Ticket_Attachment extends Model
         'type'
     ]);
 
-    public function TickComm()
+    // Relationships
+    public function ticket()
     {
-        return $this->belongsTo(Tickets::class, Comments::class);
+        return $this->belongsTo(Ticket::class);
+    }
+
+    public function comment()
+    {
+        return $this->belongsTo(TicketComment::class);
     }
 }

@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('ticket_attachments', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('tickets_id')->unsigned()->index()->nullable();
-            $table->bigInteger('comment_id')->unsigned()->index()->nullable();
+            $table->bigInteger('tickets_id')->unsigned()->index();
+            $table->bigInteger('comment_id')->unsigned()->index();
             $table->string('name');
             $table->string('path');
             $table->string('type');
             $table->timestamps();
 
             $table->foreign('tickets_id')->references('id')->on('tickets')->onDelete('cascade');
-            $table->foreign('comment_id')->references('id')->on('tickets_comments')->onDelete('cascade');
+            $table->foreign('comment_id')->references('id')->on('ticket_comments')->onDelete('cascade');
         });
     }
 

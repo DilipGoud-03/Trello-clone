@@ -4,25 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\Contracts\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
 class Board extends Model
 {
-    use HasFactory;
-    protected $fillable = ([
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $fillable = [
         'name',
-        'description',
-        'created_by'
-    ]);
-    function User()
+        'description'
+    ];
+
+    // Relationships
+    public function creator()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
     }
-    function User_Invites()
+
+    public function userInvite()
     {
-        return $this->hasMany(User_Invites::class, 'board_id');
+        return $this->hasMany(userInvite::class);
     }
-    function Stages()
+    public function stage()
     {
-        return $this->hasMany(Stages::class, 'board_id');
+        return $this->hasMany(Stage::class);
     }
 }

@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('stage_id')->unsigned()->index()->nullable();
-            $table->bigInteger('assignee')->unsigned()->index()->nullable();
+            $table->bigInteger('stage_id')->unsigned()->index();
+            $table->bigInteger('assignee')->unsigned()->index();
             $table->string('name');
             $table->longText('description');
-            $table->bigInteger('created_by')->unsigned()->index()->nullable();
+            $table->bigInteger('created_by')->unsigned()->index();
             $table->timestamps();
 
             $table->foreign('stage_id')->references('id')->on('stages')->onDelete('cascade');
-            $table->foreign('assignee')->references('id')->on('user_invites')->onDelete('cascade');
-            $table->foreign('created_by')->references('id')->on('user_invites')->onDelete('cascade');
+            $table->foreign('assignee')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

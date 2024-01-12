@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use GrahamCampbell\ResultType\success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
     /**
      * Show the form for login a new resource.
@@ -21,14 +18,7 @@ class AuthController extends Controller
         return view('login');
     }
     /**
-     * Show the form for register a new resource.
-     */
-    public function register()
-    {
-        return view('register');
-    }
-    /**
-     * Show the form for register a new resource.
+     * Show user dashboard.
      */
     public function dashboard()
     {
@@ -37,24 +27,6 @@ class AuthController extends Controller
             return view('trello.dashboard');
         }
         return view('login');
-    }
-    /**
-     * Store a newely created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:20',
-            'email' => 'required|email|max:150|unique:users',
-            'password' => 'required|min:5|confirmed',
-            'password_confirmation' => 'required|same:password'
-        ]);
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-        return redirect()->route('register')->with('success', 'Registration has successful');
     }
     /**
      * Check Login Request.
