@@ -94,8 +94,10 @@
                             <div class="step step-1">
                                 <h4> Create Board</h4>
                                 <div class="mt-3">
+
                                     <label for="boardName" class="form-label">Board Name:</label>
-                                    <input type="text" class="form-control @error('boardName') is-invalid @enderror" id="boardName" name="boardName">
+                                    <input type="hidden" name="id" value=" {{Auth::user()->id}}">
+                                    <input type=" text" class="form-control @error('boardName') is-invalid @enderror" id="boardName" name="boardName">
                                     @if ($errors->has('boardName'))
                                     <small class="text-danger">{{ $errors->first('boardName')}}</small>
                                     @endif
@@ -125,7 +127,6 @@
                                 <div class="mt-3">
                                     <label for="role" class="form-label">Select Role:</label>
                                     <select name="role" id="role" class="selectpicker form-control @error('role') is-invalid @enderror">
-                                        <option>Select Role</option>
                                         <option value="Manager">Manager</option>
                                         <option value="Project Manager">Project Manager</option>
                                         <option value="Developer">Developer</option>
