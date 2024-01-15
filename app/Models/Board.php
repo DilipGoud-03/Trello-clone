@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Board extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
