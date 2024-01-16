@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Models\Board;
 use Illuminate\Http\Request;
@@ -30,4 +31,10 @@ Route::get('/login', [LoginController::class, 'loginRequest'])->name('loginReque
 Route::controller(BoardController::class)->group(function () {
     Route::post('board', 'store')->name('storeBoard');
     Route::put('/board/{id}', 'update')->name('updateBoard');
+});
+Route::controller(TicketController::class)->group(function () {
+    Route::post('/ticket/{id}', 'show')->name('showTicket');
+    Route::post('/ticket', 'store')->name('ticketsStore');
+    Route::put('/ticket/{id}', 'update')->name('updateTicket');
+    Route::delete('/ticket/{id}', 'destroy')->name('deleteTicket');
 });

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Stage;
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -11,7 +14,6 @@ class TicketController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -19,25 +21,39 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
     }
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+
+        $stage_id = Stage::find()->where('name', 'Todo')->first();
+
+        $assignee = User::where('email', $request->assinee)->first();
+        $request->validate([
+            'ticketsName' => 'required',
+        ]);
+
+        $ticket = new Ticket();
+        $ticket->stage_id = $stage_id->id;
+        $ticket->assignee = $assignee->id;
+        $ticket->name = $request->ticketsName;
+        $ticket->description = $request->decription;
+        $ticket->created_by = $request->created_by;
+        $ticket->save();
+
+        return back();
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        $ticket = Ticket::find($request->id);
+        return view('trello.modal.ticketsDetails', ['ticket' => $ticket]);
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -57,8 +73,10 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $deleteTickets = Ticket::find($request->id);
+        $deleteTickets->delete();
+        return back();
     }
 }

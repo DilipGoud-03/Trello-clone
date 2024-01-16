@@ -24,7 +24,7 @@ class Board extends Model
 
     public function userInvite()
     {
-        return $this->hasMany(userInvite::class);
+        return $this->hasMany(UserInvite::class);
     }
     public function stage()
     {

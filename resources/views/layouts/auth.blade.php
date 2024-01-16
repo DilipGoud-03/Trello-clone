@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="overflow: hidden;">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@
                 <ul class="navbar-nav ">
                     @if(auth()->user())
                     <li class="nav-item">
-                        <a class="nav-link {{ (request()->is('dashboard')) ? 'active' : '' }}" href="{{route('dashboard')}}">Dashboard</a>
+                        <a class="nav-link {{ (request()->is('dashboard')) ? 'active' : '' }}" href="{{route('dashboard')}}">Boards</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav " style="margin-left: auto">

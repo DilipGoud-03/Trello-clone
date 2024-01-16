@@ -19,18 +19,18 @@ class ModalController extends Controller
         $board->name = $request->boardName;
         $board->description = $request->baordDescription;
         $board->created_by = $request->created_by;
-        // $board->save();
+        $board->save();
         // dd($request->userEmail);
 
-        $adminId = User::find($request->created_by)->first();
-        $findUserId = User::where('email', $request->userEmail)->first();
+        // $adminId = User::find($request->created_by);
+        // $findUserId = User::where('email', $request->userEmail)->first();
 
-        $user_invite = new UserInvite();
-        $user_invite->user_id = $findUserId->id;
-        $user_invite->board_id = $board->id;
-        $user_invite->role = $request->role;
-        $user_invite->status = $request->created_by;
-        $user_invite->save();
+        // $user_invite = new UserInvite();
+        // $user_invite->user_id = $findUserId->id;
+        // $user_invite->board_id = $board->id;
+        // $user_invite->role = $request->role;
+        // $user_invite->invited_by = $request->created_by;
+        // $user_invite->save();
 
         // Default stages
         // 1. Todo 
@@ -81,6 +81,6 @@ class ModalController extends Controller
             $stage->created_by = $request->created_by;
             $stage->save();
         }
-        return back()->with('success', 'Board Created');
+        return back();
     }
 }
