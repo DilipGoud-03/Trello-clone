@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigInteger('board_id')->unsigned()->index();
             $table->enum('role', ['Manager', 'Project Manager', 'Developer'])->default('Developer');
             $table->enum('status', ['Panding', 'Rejected', 'Accepted'])->default('Panding');
+            $table->string('token');
             $table->bigInteger('invited_by')->unsigned()->index();
             $table->timestamps();
 

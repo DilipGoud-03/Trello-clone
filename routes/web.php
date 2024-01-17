@@ -7,6 +7,7 @@ use App\Http\Controllers\ModalController;
 use App\Http\Controllers\StageController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserInviteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,4 +55,10 @@ Route::controller(TicketController::class)->group(function () {
     Route::get('/tickets/{id}', 'show')->name('showTicket');
     Route::post('/tickets', 'store')->name('ticketsStore');
     Route::get('/ticket/{id}', 'destroy')->name('deleteTicket');
+});
+
+Route::controller(UserInviteController::class)->group(function () {
+    Route::get('/editUser/{id}', 'update')->name('editUser');
+    Route::post('/inviteUser', 'store')->name('inviteUser');
+    Route::get('/deleteUser/{id}', 'destroy')->name('deleteUser');
 });
