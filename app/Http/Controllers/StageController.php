@@ -26,17 +26,16 @@ class StageController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'stageName' => 'required'
         ]);
 
-        $findSequece = Stage::where('board_id', $request->board_id)->get();
+        $findSequence = Stage::where('board_id', $request->board_id)->get();
 
         $stage = new Stage();
         $stage->board_id = $request->board_id;
         $stage->name = $request->stageName;
-        $stage->sequence = count($findSequece) + 1;
+        $stage->sequence = count($findSequence) + 1;
         $stage->is_default = 0;
         $stage->created_by = $request->create_by;
         $stage->save();

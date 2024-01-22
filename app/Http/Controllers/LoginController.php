@@ -40,11 +40,9 @@ class LoginController extends Controller
         ]);
         $userCredential = $request->only('email', 'password');
         if (Auth::attempt($userCredential)) {
-            // return response()->json(['message' => 'success']);
             return redirect()->route('dashboard')->with('success', 'Login successful');
         }
         return redirect()->route('login')->with('Error', 'Email and Password invalid');
-        // return response()->json(['message' => 'Email and Password invalid']);
     }
     public function logout()
     {

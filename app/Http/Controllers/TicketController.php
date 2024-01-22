@@ -6,6 +6,7 @@ use App\Models\Stage;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
@@ -27,7 +28,7 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        $assignee = User::where('email', $request->assinee)->first();
+        $assignee = User::where('email', $request->assignee)->first();
         $request->validate([
             'ticketsName' => 'required',
         ]);
@@ -35,8 +36,8 @@ class TicketController extends Controller
         $ticket->stage_id = $request->stage_id;
         $ticket->assignee = $assignee->id;
         $ticket->name = $request->ticketsName;
-        $ticket->description = $request->decription;
-        $ticket->created_by = $request->created_by;
+        $ticket->description = $request->description;
+        $ticket->created_by = Auth::user()->id;
         $ticket->save();
 
         return back();
@@ -48,7 +49,6 @@ class TicketController extends Controller
     public function show(Request $request)
     {
         $tickets = Ticket::find($request->id)->first();
-        // dd($tickets);
         return view('trello.ticketsDetails', ['tickets' => $tickets]);
     }
     /**

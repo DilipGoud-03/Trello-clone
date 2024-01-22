@@ -5,6 +5,7 @@ use App\Http\Controllers\BoardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ModalController;
 use App\Http\Controllers\StageController;
+use App\Http\Controllers\TicketCommentsController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserInviteController;
@@ -56,9 +57,15 @@ Route::controller(TicketController::class)->group(function () {
     Route::post('/tickets', 'store')->name('ticketsStore');
     Route::get('/ticket/{id}', 'destroy')->name('deleteTicket');
 });
-
 Route::controller(UserInviteController::class)->group(function () {
     Route::get('/editUser/{id}', 'update')->name('editUser');
     Route::post('/inviteUser', 'store')->name('inviteUser');
     Route::get('/deleteUser/{id}', 'destroy')->name('deleteUser');
+    Route::get('/userAccepted/{token}', 'userAcceptInvitation')->name('userAcceptInvitation');
+    Route::get('/userRejected/{token}', 'userRejectInvitation')->name('userRejectInvitation');
+});
+
+Route::controller(TicketCommentsController::class)->group(function () {
+    Route::post('/comments', 'store')->name('commentsStore');
+    Route::get('/ticket/{id}', 'destroy')->name('deleteTicket');
 });

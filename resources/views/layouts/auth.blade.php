@@ -52,6 +52,9 @@
     <script>
         var currentStep = 1;
         $(document).ready(function() {
+            $('#mymodal').on('hidden.bs.modal', function() {
+                this.modal('show');
+            });
             $('#multi-step-form').find('.step').slice(1).hide();
 
             $(".next-step").click(function() {
@@ -85,7 +88,7 @@
                 <ul class="navbar-nav ">
                     @if(auth()->user())
                     <li class="nav-item">
-                        <a class="nav-link {{ (request()->is('dashboard')) ? 'active' : '' }}" href="{{route('dashboard')}}">Boards</a>
+                        <a class="nav-link {{ (request()->is('dashboard')) ? 'active' : '' }}" href="{{route('dashboard')}}">Dashbaord</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav " style="margin-left: auto">

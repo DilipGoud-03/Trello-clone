@@ -1,12 +1,24 @@
 @extends('layouts/auth')
-@section('content')
 <div class="container mt-6">
+    @section('content')
     <div class=" container card w-50">
-        @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            {{ $message }}
+        <div class="col-md-8">
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                {{ $message }}
+            </div>
+            @endif
+            @if ($message = Session::get('error'))
+            <div class="alert alert-success">
+                {{ $message }}
+            </div>
+            @endif
+            @if ($message = Session::get('message'))
+            <div class="alert alert-success">
+                {{ $message }}
+            </div>
+            @endif
         </div>
-        @endif
         <div class="card-header">
             Register Here
         </div>
@@ -47,5 +59,5 @@
             </form>
         </div>
     </div>
+    @endsection
 </div>
-@endsection

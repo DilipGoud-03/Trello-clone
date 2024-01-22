@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Board;
 use App\Models\Ticket;
+use App\Models\TicketComment;
 use App\Models\User;
-use App\Models\UserInvite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BoardController extends Controller
 {
@@ -15,20 +16,21 @@ class BoardController extends Controller
      */
     public function index(Request $request)
     {
-        $boards = Board::where('id', $request->id)->with('stage')->first();
+        $boards = Board::where('id', $request->id)->with('stage', 'userInvite')->first();
         $stages = $boards->stage;
-
-        $user_Invites = UserInvite::where('board_id', $request->id)->with('user')->get();
-        // $admins = UserInvite::where('board_id', $request->id)->with('invited_by')->get();
-        // dd($userInvites);
-        // dd($admins->invited_by->name);
         $tickets = Ticket::with('stage')->get();
+        $user_Invites =  DB::table('users')
+            ->select('users.name', 'user_invites.id', 'user_invites.role', 'user_invites.status', 'user_invites.invited_by')
+            ->join('user_invites', 'user_invites.user_id', '=', 'users.id')
+            ->where('user_invites.board_id', $request->id)
+            ->get();
+        $comments = TicketComment::with('ticket')->get();
         return view('trello.board', [
             'boards' => $boards,
             'stages' => $stages,
             'tickets' => $tickets,
             'user_Invites' => $user_Invites,
-            // 'admins' => $admins
+            'comments' => $comments
         ]);
     }
     /**
@@ -66,7 +68,6 @@ class BoardController extends Controller
     public function update(Request $request, string $id)
     {
     }
-
     /**
      * Remove the specified resource from storage.
      */

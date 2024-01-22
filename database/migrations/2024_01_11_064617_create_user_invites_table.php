@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned()->index();
             $table->bigInteger('board_id')->unsigned()->index();
-            $table->enum('role', ['Manager', 'Project Manager', 'Developer'])->default('Developer');
-            $table->enum('status', ['Panding', 'Rejected', 'Accepted'])->default('Panding');
+            $table->enum('role', ['Manager', 'Project Manager', 'Developer']);
+            $table->enum('status', ['Pending', 'Rejected', 'Accepted'])->default('Pending');
             $table->string('token');
             $table->bigInteger('invited_by')->unsigned()->index();
             $table->timestamps();
@@ -26,7 +26,6 @@ return new class extends Migration
             $table->foreign('board_id')->references('id')->on('boards')->onDelete('cascade');
         });
     }
-
     /**
      * Reverse the migrations.
      */

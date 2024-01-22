@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TicketComment;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Return_;
 
 class TicketCommentsController extends Controller
 {
@@ -27,7 +29,16 @@ class TicketCommentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'comment' => 'required'
+        ]);
+        $comment = new TicketComment();
+        $comment->created_by = $request->created_by;
+        $comment->tickets_id = $request->tickets_id;
+        $comment->comment = $request->comment;
+        $comment->save();
+
+        return back();
     }
 
     /**
