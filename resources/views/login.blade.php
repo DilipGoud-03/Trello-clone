@@ -27,7 +27,7 @@
                     <label for="email" class="form-label">Email Address</label>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{old('email')}}">
                     @if ($errors->has('email'))
-                    <small class="text-danger">{{ $errors->first('email') }}</small>
+                    <small class="text-danger">{{ $errors->first('email')}}</small>
                     @endif
                 </div>
                 <div class="mt-3 mb-6 row">
@@ -35,13 +35,6 @@
                     <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
                     @if ($errors->has('password'))
                     <small class="text-danger">{{ $errors->first('password') }}</small>
-                    @endif
-                </div>
-                <div class="mt-3 mb-6 row">
-                    <label for="password_confirmation" class="form-label">Confirm Password</label>
-                    <input type="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" name="password_confirmation">
-                    @if ($errors->has('name'))
-                    <small class="text-danger">{{ $errors->first('password_confirmation') }}</small>
                     @endif
                 </div>
                 <div class=" mt-3 mb-1">

@@ -36,7 +36,7 @@ class UserInviteController extends Controller
         );
         $user = User::where('email', $request->email)->first();
         if (is_null($user)) {
-            return back()->with('error', 'Invalid Email address');
+            return back()->with('error', ' Email address does not exist');
         }
 
         $token = Str::random(64);
@@ -55,7 +55,7 @@ class UserInviteController extends Controller
             'board' => $request->boardName,
             'token' => $token,
         ];
-        Mail::to($request->userEmail)->send(new SendInvitationMail($mailData));
+        Mail::to($request->email)->send(new SendInvitationMail($mailData));
 
         return back();
     }
@@ -81,7 +81,7 @@ class UserInviteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        dd($request->id);
+        // dd($request->id);
     }
     /**
      * Remove the specified resource from storage.

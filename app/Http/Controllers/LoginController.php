@@ -36,13 +36,13 @@ class LoginController extends Controller
     {
         $request->validate([
             'email' => 'string|required|email',
-            'password' => 'string|required|confirmed'
+            'password' => 'string|required'
         ]);
         $userCredential = $request->only('email', 'password');
         if (Auth::attempt($userCredential)) {
             return redirect()->route('dashboard')->with('success', 'Login successful');
         }
-        return redirect()->route('login')->with('Error', 'Email and Password invalid');
+        return redirect()->route('login')->with('error', 'Invalid email or password');
     }
     public function logout()
     {
@@ -52,7 +52,7 @@ class LoginController extends Controller
     function redirectDash()
     {
         if (Auth::user()) {
-            route('dashboard');
+            return route('dashboard');
         }
     }
 }

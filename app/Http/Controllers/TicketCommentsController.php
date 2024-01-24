@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TicketComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\Return_;
 
 class TicketCommentsController extends Controller
@@ -70,6 +71,11 @@ class TicketCommentsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $deleteComment = TicketComment::find($id)->first();
+        if (Auth::user()->id == $deleteComment->created_by) {
+            $deleteComment->delete();
+            return back()->with('success', "comment deleted");
+        }
+        return back()->with('error', "You can't delete this comment");
     }
 }

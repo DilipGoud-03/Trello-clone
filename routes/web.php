@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ModalController;
@@ -67,5 +66,5 @@ Route::controller(UserInviteController::class)->group(function () {
 
 Route::controller(TicketCommentsController::class)->group(function () {
     Route::post('/comments', 'store')->name('commentsStore');
-    Route::get('/ticket/{id}', 'destroy')->name('deleteTicket');
+    Route::get('/comments/{id}', 'destroy')->name('commentsDelete');
 });

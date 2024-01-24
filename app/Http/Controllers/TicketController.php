@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Expr\Cast\String_;
 
 class TicketController extends Controller
 {
@@ -42,7 +43,6 @@ class TicketController extends Controller
 
         return back();
     }
-
     /**
      * Display the specified resource.
      */
@@ -70,9 +70,9 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(String $id)
     {
-        $deleteTickets = Ticket::find($request->id);
+        $deleteTickets = Ticket::find($id);
         $deleteTickets->delete();
         return back();
     }

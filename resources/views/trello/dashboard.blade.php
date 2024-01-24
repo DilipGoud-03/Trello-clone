@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 <div class="row justify-content-center mt-1">
     @section('content')
-    <div class="col-md-8">
+    <div class="col-md-12">
         @if ($message = Session::get('success'))
         <div class="alert alert-success">
             {{ $message }}
@@ -19,7 +19,6 @@
         @endif
     </div>
     <div class="card">
-        @if(!empty($board))
         <div class="card-header header-">
             <!-- Button to Open the Modal -->
             <div style="margin-left: 130px">
@@ -48,17 +47,16 @@
                                                 @endif
                                             </div>
                                             <div class="mt-3">
-                                                <label for="baordDescription" class="form-label">Board Description:</label>
-                                                <textarea class="form-control @error('baordDescription') is-invalid @enderror" name="baordDescription" id="baordDescription"></textarea>
-                                                @if ($errors->has('baordDescription'))
-                                                <small class="text-danger">{{ $errors->first('baordDescription') }}</small>
+                                                <label for="boardDescription" class="form-label">Board Description:</label>
+                                                <textarea class="form-control @error('boardDescription') is-invalid @enderror" name="boardDescription" id="boardDescription"></textarea>
+                                                @if ($errors->has('boardDescription'))
+                                                <small class="text-danger">{{ $errors->first('boardDescription')}}</small>
                                                 @endif
                                             </div>
                                             <div class="mt-3">
                                                 <button type="button" class="btn btn-dark next-step" style="float: inline-end">Next</button>
                                             </div>
                                         </div>
-
                                         <!-- Invite User -->
                                         <div class="step step-2">
                                             <h4>Invite User</h4>
@@ -85,7 +83,6 @@
                                                 <button type="button" class="btn btn-dark next-step" style="float: inline-end">Next</button>
                                             </div>
                                         </div>
-
                                         <!-- Create Stages -->
                                         <div class="step step-3">
                                             <h4>Create Stages</h4>
@@ -116,7 +113,6 @@
                 </div>
             </div>
         </div>
-        @endif
         <div class="card-body" style="margin: 16px 147px -16px 125px;">
             <table class="table table-">
                 <thead>
@@ -126,7 +122,7 @@
                 <tbody>
                     @foreach($board as $newboard)
 
-                    @if(auth()->user()->id ==$newboard->created_by)
+                    @if(auth()->user()->id ==$newboard->created_by )
                     <tr>
                         <td>
                             <a href="{{route('board',[$newboard->id])}}" class="btn" title="show board details">{{$newboard->name}}</a>

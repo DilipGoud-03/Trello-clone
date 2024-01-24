@@ -8,12 +8,12 @@
         </div>
         @endif
         @if ($message = Session::get('error'))
-        <div class="alert alert-success">
+        <div class="alert alert-danger">
             {{ $message }}
         </div>
         @endif
         @if ($message = Session::get('message'))
-        <div class="alert alert-success">
+        <div class="alert alert-info">
             {{ $message }}
         </div>
         @endif
@@ -121,7 +121,7 @@
                         <!-- Modal body -->
                         <div class="modal-body"></div>
                         <div id="container" class="container mt-1">
-                            <form id="multi-step-form" action="{{route('modalData')}}" method="post">
+                            <form id="multi-step-form" action="{{route('boardStore')}}" method="post">
                                 @csrf
                                 <div class="mb-3">
                                     <label for="boardName" class="form-label">Board Name:</label>
@@ -179,9 +179,6 @@
                                                             <small class="text-danger">{{ $errors->first('ticketsName')}}</small>
                                                             @endif
                                                         </div>
-                                                        <!--1. I have fixed new previous issue of invite user listing according to boards show successful with thier role.(Done) -->
-                                                        <!--2. I have created new modal for show tickets details. (Done) -->
-                                                        <!--3. I have created new screen to store comments in database and show above the comment form. (Done)  -->
                                                         <div class="mb-3">
                                                             <label for="description" class="form-label">Ticket Description:</label>
                                                             <input type=" text" class="form-control @error('description') is-invalid @enderror" id="description" name="description" value="">
@@ -216,7 +213,7 @@
                                             <input type="hidden" name="board_id" value="{{$boards->id}}">
                                             <input type="text" name="stageName" class="btn" placeholder="new Stage" style="width: 107px">
                                             <input type="hidden" name="create_by" value="{{$boards->created_by}}">
-                                            <button type="submit" class="btn btn-light">Add</button>
+                                            <button type="submit" onclick="$('formId').submit()" class="btn btn-light">Add</button>
                                         </div>
                                     </form>
                                 </div>
@@ -245,7 +242,10 @@
                                                     </div>
                                                     <!-- Modal body -->
                                                     <div class="modal-body">
+
+
                                                         <div class="mb-3">
+
                                                             <label for="name" class="form-label">Name :</label>
                                                             <input type="text" name="name" class="form-control" disabled value="{{$ticket->name}}" />
                                                         </div>
@@ -254,36 +254,80 @@
                                                             <textarea name="description" class="form-control" rows="5" disabled value="">{{$ticket->description}}</textarea>
                                                         </div>
                                                         <div class="col-auto">
-                                                            <div class="mt-5 mb-3">Attachments</div>
-                                                            <form action="" method="post">
-                                                                @csrf
-                                                                <div>
-                                                                    <input type="hidden" name="file" value="{{$ticket->id}}">
-                                                                    <input type="hidden" name="created_by" value="{{$boards->created_by}}">
-                                                                    <input type="file" name="file" class="form-control" placeholder="Comment Here" style="width: 60%;display: inline-block;">
-                                                                    <button type="submit" class="btn btn-secondary" style="margin-left: 12px">+</button>
+                                                            <div class="mt-5 mb-4">Attachments</div>
+                                                            <div class="mb-3">
+                                                                <a type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#attachmentModal" title="Show details">
+                                                                    <h2>+</h2>
+                                                                </a>
+                                                            </div>
+                                                            <div class="modal" id="attachmentModal" aria-hidden="true">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <!-- Modal Header -->
+                                                                        <div class="modal-header">
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                        </div>
+                                                                        <!-- Modal body -->
+                                                                        <div class="modal-body">
+                                                                            <form class="form" action="">
+                                                                                @csrf
+                                                                                <div class="mb-3">
+                                                                                    <label for="attachmentName" class="form-lable">Name :</label>
+                                                                                    <input type="hidden" name="tickets_id" id="tickets_id" class="form-control">
+                                                                                    <input type="text" name="attachmentName" id="attachmentName" class="form-control">
+                                                                                </div>
+                                                                                <div class="mb-3">
+                                                                                    <label for="path" class="form-lable">Path :</label>
+                                                                                    <input type="text" name="path" id="path" class="form-control">
+                                                                                </div>
+                                                                                <div class="mb-3">
+                                                                                    <label for="type" class="form-lable">Type :</label>
+                                                                                    <input type="text" name="type" id="type" class="form-control">
+                                                                                </div>
+                                                                                <div class="mb-3">
+                                                                                    <button type="submit" class="btn btn-success">Submit</button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </form>
+                                                            </div>
+                                                            <div class=" form-control mb-5">
+                                                                <div class="btn-group dropend">
+                                                                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li><a href="" class="btn" style="color: red;" title="Delete">Delete</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="mb-3">Comments:</div>
                                                         <div class="col-auto">
                                                             @foreach($comments as $comment)
-
-                                                            <div class="mt-3 mb-3" style="border: 2px solid lavenderblush;border-radius: 12pc;background: azure;margin: 12px">
-                                                                <p style="margin: 8px 0px 7px 32px;">{{$comment->comment}}</p>
-                                                            </div>
-
-                                                            @endforeach
-                                                            <form action="{{route('commentsStore')}}" method="post">
-                                                                @csrf
-                                                                <div>
-                                                                    <input type="hidden" name="created_by" value="{{auth()->user()->id}}">
-                                                                    <input type="hidden" name="tickets_id" value="{{$ticket->id}}">
-                                                                    <input type="text" name="comment" class="form-control" placeholder="Comment Here" style="width: 60%;display: inline-block;">
-                                                                    <button type="submit" class="btn btn-info" style="margin-left: 12px">Comment</button>
+                                                            @if($comment->tickets_id==$ticket->id)
+                                                            <div class="group dropend mt-3 mb-3" style="border: 2px solid lavenderblush;border-radius: 12px;background: azure;margin: 12px">
+                                                                <p class="btn" type="button" data-bs-toggle="dropdown" style="margin: 8px 0px 7px 32px;">{{$comment->comment}}</p>
+                                                                <div class="btn-group dropend">
+                                                                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <a class="btn" style="color: red;" href="{{route('commentsDelete',['id'=>$comment->id])}}">Delete</a>
+                                                                    </ul>
                                                                 </div>
-                                                            </form>
+                                                            </div>
                                                         </div>
+                                                        @endif
+                                                        @endforeach
+                                                        <form id="commentsForm" action="{{route('commentsStore')}}" method="post">
+                                                            @csrf
+                                                            <div>
+                                                                <input type="hidden" name="created_by" value="{{auth()->user()->id}}">
+                                                                <input type="hidden" name="tickets_id" value="{{$ticket->id}}">
+                                                                <input type="text" name="comment" class="form-control" placeholder="Comment Here" style="width:60%;display: inline-block;">
+                                                                <button type="submit" onclick="$('commentsForm').submit()" class="btn btn-info" style="margin-left: 12px">Comment</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
