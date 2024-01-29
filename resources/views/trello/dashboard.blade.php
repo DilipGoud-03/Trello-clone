@@ -34,7 +34,7 @@
                                 <a href="{{route('board',[$newboard->id])}}" class="btn" title="show board details">{{$newboard->name}}</a>
                             </td>
                             <td>
-                                <a href="" class="btn btn-danger" title="delete board">Delete</a>
+                                <a href="{{route('deleteBoard',[$newboard->id])}}" class="btn btn-danger" title="delete board">Delete</a>
                             </td>
                         </tr>
                         @endif

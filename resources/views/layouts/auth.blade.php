@@ -16,15 +16,19 @@
                 <ul class="navbar-nav ">
                     @if(auth()->user())
                     <li class="nav-item">
-                        <a class="nav-link {{ (request()->is('dashboard')) ? 'active' : '' }}" href="{{route('dashboard')}}">Dashboard</a>
+                        <a class="nav-link {{ (request()->is('dashboard')) ? 'active' : '' }}" href="{{route('dashboard')}}">Boards</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav " style="margin-left: auto">
-                    <li class="nav-item">
-                        <a class="nav-link {{ (request()->is('logout')) ? 'active' : '' }}" href="{{ route('logout') }}">Logout</a>
+                    <li>
+                        <a class=" nav-link {{ (request()->is('logout')) ? 'active' : '' }}">{{auth()->user()->name}}</a>
                     </li>
                 </ul>
-
+                <ul class="navbar-nav " style="margin-left: auto">
+                    <li>
+                        <a class=" nav-link {{ (request()->is('logout')) ? 'active' : '' }}" href="{{ route('logout') }}">Logout</a>
+                    </li>
+                </ul>
                 <ul class="navbar-nav ">
                     @else
                     <li class="nav-item">

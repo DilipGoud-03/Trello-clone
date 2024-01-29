@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Board extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
@@ -24,7 +24,7 @@ class Board extends Model
 
     public function userInvite()
     {
-        return $this->hasMany(userInvite::class);
+        return $this->hasMany(UserInvite::class);
     }
     public function stage()
     {

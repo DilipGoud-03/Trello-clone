@@ -1,9 +1,8 @@
-<div class="modal" id="createBoardModel" data-bs-backdrop="static" aria-hidden="true">
+<div class="modal" id="showTicketsDetailsModel" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4>Create Board</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <!-- Modal body -->

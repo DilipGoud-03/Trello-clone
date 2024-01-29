@@ -96,7 +96,7 @@
                                 <div class="mt-3">
 
                                     <label for="boardName" class="form-label">Board Name:</label>
-                                    <input type="hidden" name="id" value=" {{Auth::user()->id}}">
+                                    <input type="hidden" name="created_by" value=" {{Auth::user()->id}}">
                                     <input type=" text" class="form-control @error('boardName') is-invalid @enderror" id="boardName" name="boardName">
                                     @if ($errors->has('boardName'))
                                     <small class="text-danger">{{ $errors->first('boardName')}}</small>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Board;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,8 @@ class LoginController extends Controller
     public function login()
     {
         if (Auth::user()) {
-            return redirect($this->dashboard());
+
+            return redirect($this->redirectDash());
         }
         return view('login');
     }
@@ -23,10 +25,9 @@ class LoginController extends Controller
     public function dashboard()
     {
         if (Auth::user()) {
-
-            return view('trello.dashboard');
+            $board = Board::get();
+            return view('trello.dashboard', ['board' => $board]);
         }
-        return view('login');
     }
     /**
      * Check Login Request.
@@ -49,5 +50,11 @@ class LoginController extends Controller
     {
         Auth::logout();
         return redirect()->route('login')->with('success', 'You have logout successfully');
+    }
+    function redirectDash()
+    {
+        if (Auth::user()) {
+            route('dashboard');
+        }
     }
 }
