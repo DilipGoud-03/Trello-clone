@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Board;
 use App\Models\Ticket;
+use App\Models\User;
+use App\Models\UserInvite;
 use Illuminate\Http\Request;
 
 class BoardController extends Controller
@@ -14,15 +16,19 @@ class BoardController extends Controller
     public function index(Request $request)
     {
         $boards = Board::where('id', $request->id)->with('stage')->first();
-        $userInvite = Board::where('id', $request->id)->with('userInvite')->get();
-        // dd($userInvite);
         $stages = $boards->stage;
-        $tickets = Ticket::with('stage')->get();
 
+        $user_Invites = UserInvite::where('board_id', $request->id)->with('user')->get();
+        // $admins = UserInvite::where('board_id', $request->id)->with('invited_by')->get();
+        // dd($userInvites);
+        // dd($admins->invited_by->name);
+        $tickets = Ticket::with('stage')->get();
         return view('trello.board', [
             'boards' => $boards,
             'stages' => $stages,
-            'tickets' => $tickets
+            'tickets' => $tickets,
+            'user_Invites' => $user_Invites,
+            // 'admins' => $admins
         ]);
     }
     /**

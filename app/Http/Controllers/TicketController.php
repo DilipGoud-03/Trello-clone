@@ -27,16 +27,12 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-
-        $stage_id = Stage::find()->where('name', 'Todo')->first();
-
         $assignee = User::where('email', $request->assinee)->first();
         $request->validate([
             'ticketsName' => 'required',
         ]);
-
         $ticket = new Ticket();
-        $ticket->stage_id = $stage_id->id;
+        $ticket->stage_id = $request->stage_id;
         $ticket->assignee = $assignee->id;
         $ticket->name = $request->ticketsName;
         $ticket->description = $request->decription;
@@ -51,8 +47,9 @@ class TicketController extends Controller
      */
     public function show(Request $request)
     {
-        $ticket = Ticket::find($request->id);
-        return view('trello.modal.ticketsDetails', ['ticket' => $ticket]);
+        $tickets = Ticket::find($request->id)->first();
+        // dd($tickets);
+        return view('trello.ticketsDetails', ['tickets' => $tickets]);
     }
     /**
      * Show the form for editing the specified resource.

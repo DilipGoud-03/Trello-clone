@@ -13,6 +13,7 @@ class UserInvite extends Model
         'board_id',
         'role',
         'status',
+        'token',
         'invited_by'
     ];
 
@@ -20,7 +21,7 @@ class UserInvite extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function invitedBy()
+    public function invited_by()
     {
         return $this->belongsTo(User::class, 'invited_by');
     }
