@@ -31,9 +31,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     Route::post('/store', 'store')->name('store');
 // });
 
-// Route::controller(LoginController::class)->group(function () {
-//     Route::post('/loginRequest', 'loginRequest')->name('loginRequest');
-// });
+Route::controller(LoginController::class)->group(function () {
+    // Route::post('/loginRequest', 'loginRequest')->name('loginRequest');
+});
 
 // Route::controller(BoardController::class)->group(function () {
 

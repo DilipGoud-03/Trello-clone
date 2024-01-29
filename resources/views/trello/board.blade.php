@@ -172,24 +172,24 @@
                             </form>
                         </li>
                     </div>
-
                 </thead>
                 <tbody>
                     <tr>
                         @foreach($stages as $stage)
                         <td style=" width: 0%;">
-                            @foreach($tickets as $ticket)
-                            @if($ticket->stage_id==$stage->id )
                             <div id="ticket_sortable" class="ticket_list_ul">
+                                @foreach($tickets as $ticket)
+                                @if($ticket->stage_id==$stage->id )
                                 <li class="ui-state-default" data-id="{{ $ticket->id }}">
+                                    <!-- <p>{{ $ticket->id }}</p> -->
                                     <p><a href="{{route('deleteTicket',['id'=>$ticket->id])}}" class="btn" style="margin: -7px -16px -50px 222px;color: red;" title="Delete Tickets">X</a></p>
                                     <p style="text-align: center;margin: auto;">
                                         <a type="button" class="btn ticketsDetailsModal" data-bs-toggle="modal" data-id="{{$ticket->id}}" data-bs-target="#ticketsDetailsModal" title="Show details">{{$ticket->name}}</a>
                                     </p>
                                 </li>
+                                @endif
+                                @endforeach
                             </div>
-                            @endif
-                            @endforeach
                         </td>
                         @endforeach
                     </tr>
