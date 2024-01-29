@@ -96,12 +96,12 @@
         </script>
         <script type="text/javascript">
             $(document).ready(function() {
-                $("#stage_sortable").sortable({
+                $("#ticket_sortable").sortable({
                     placeholder: "ui-state-highlight",
                     update: function(event, ui) {
 
                         var stage_order_ids = new Array();
-                        $('#stage_sortable li').each(function() {
+                        $('#ticket_sortable li').each(function() {
                             stage_order_ids.push($(this).data("id"));
                         });
                         $.ajax({
@@ -174,7 +174,6 @@
                         var created_by = $('#created_by ').val();
                         var tickets_id = $(".modal-body #ticket_id").val(myTicketId);
                         var comment = $('#comment').val();
-                        alert(tickets_id);
                         $.ajax({
                             url: "{{route('commentsStore')}}",
                             type: "POST",
