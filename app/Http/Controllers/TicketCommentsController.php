@@ -34,12 +34,18 @@ class TicketCommentsController extends Controller
             'comment' => 'required'
         ]);
         $comment = new TicketComment();
-        $comment->created_by = $request->created_by;
+        $comment->created_by = Auth::user()->id;
         $comment->tickets_id = $request->tickets_id;
         $comment->comment = $request->comment;
         $comment->save();
 
-        return back();
+        return response()->json(
+            [
+                'success' => 'comment created successfully',
+                'alert-type' => 'success'
+            ]
+
+        );
     }
 
     /**
@@ -69,13 +75,19 @@ class TicketCommentsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        $deleteComment = TicketComment::find($id)->first();
+        $deleteComment = TicketComment::find($request->id);
         if (Auth::user()->id == $deleteComment->created_by) {
             $deleteComment->delete();
-            return back()->with('success', "comment deleted");
+            return response()->json([
+                'success' => "comment deleted",
+                'alert-type' => 'success'
+            ]);
         }
-        return back()->with('error', "You can't delete this comment");
+        return response()->json([
+            'error' => "You can't delete this comment",
+            'alert-type' => 'error'
+        ]);
     }
 }

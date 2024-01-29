@@ -47,7 +47,7 @@
                                 <tbody>
                                     @foreach($user_Invites as $userInvite)
                                     <tr>
-                                        <td>{{$userInvite->name}}</td>
+                                        <td>{{$userInvite->user->name}}</td>
                                         <td>{{$userInvite->role}}</td>
                                         <td>{{$userInvite->status}}</td>
                                         <td>
@@ -151,7 +151,6 @@
         <div class="card-body">
             <table>
                 <thead>
-
                     <div id="stage_sortable" class="stage_list_ul">
                         @foreach($stages as $stage)
                         <li style="display: inline-block;margin-right: 20px;" class="ui-state-default" data-id="{{ $stage->id }}">
@@ -181,7 +180,6 @@
                                 @foreach($tickets as $ticket)
                                 @if($ticket->stage_id==$stage->id )
                                 <li class="ui-state-default" data-id="{{ $ticket->id }}">
-                                    <!-- <p>{{ $ticket->id }}</p> -->
                                     <p><a href="{{route('deleteTicket',['id'=>$ticket->id])}}" class="btn" style="margin: -7px -16px -50px 222px;color: red;" title="Delete Tickets">X</a></p>
                                     <p style="text-align: center;margin: auto;">
                                         <a type="button" class="btn ticketsDetailsModal" data-bs-toggle="modal" data-id="{{$ticket->id}}" data-bs-target="#ticketsDetailsModal" title="Show details">{{$ticket->name}}</a>
@@ -198,18 +196,18 @@
         </div>
     </div>
 </div>
-@foreach($tickets as $ticket)
+
 <div class="modal" id="ticketsDetailsModal" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
+                <span class="ticket_id"></span>
                 <h4>{{$ticket->name}}</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <!-- Modal body -->
             <div class="modal-body">
-                <h3 class="my_tickets_id"></h3>
                 <div class="mb-3">
                     <label for="name" class="form-label">Name :</label>
                     <input type="text" name="name" class="form-control" disabled value="{{$ticket->name}}" />
@@ -218,77 +216,21 @@
                     <label for="description" class="form-label">Description :</label>
                     <textarea name="description" class="form-control" rows="5" disabled value="">{{$ticket->description}}</textarea>
                 </div>
-                <div class="col-auto">
-                    <div class="mt-5 mb-4">Attachments</div>
-                    <div class="mb-3">
-                        <a type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#attachmentModal" title="Show details">
-                            <h2>+</h2>
-                        </a>
-                    </div>
-                    <div class="modal" id="attachmentModal" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <!-- Modal body -->
-                                <div class="modal-body">
-                                    <form class="form" action="">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label for="attachmentName" class="form-lable">Name :</label>
-                                            <input type="hidden" name="tickets_id" id="tickets_id" class="form-control">
-                                            <input type="text" name="attachmentName" id="attachmentName" class="form-control">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="path" class="form-lable">Path :</label>
-                                            <input type="text" name="path" id="path" class="form-control">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="type" class="form-lable">Type :</label>
-                                            <input type="text" name="type" id="type" class="form-control">
-                                        </div>
-                                        <div class="mb-3">
-                                            <button type="submit" class="btn btn-success">Submit</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" form-control mb-5">
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="" class="btn" style="color: red;" title="Delete">Delete</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
                 <div class="mb-3">Comments:</div>
+                <div id="success_message"></div>
+                <div id="error_message"></div>
                 @foreach($comments as $comment)
-                @if($comment->tickets_id==$ticket->id)
-                <div class="col-auto">
-                    <div class="group dropend mt-3 mb-3" style="border: 2px solid lavenderblush;border-radius: 12px;background: azure;margin: 12px">
-                        <p class="btn" type="button" data-bs-toggle="dropdown" style="margin: 8px 0px 7px 32px;">{{$comment->comment}}</p>
-                        <div class="btn-group dropend">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            </button>
-                            <ul class="dropdown-menu">
-                                <a class="btn" style="color: red;" href="{{route('commentsDelete',['id'=>$comment->id])}}">Delete</a>
-                            </ul>
-                        </div>
-                    </div>
+                @if($ticket->id==$comment->tickets_id)
+                <div class="mb-4 commentDelete" style="border: 1px solid black;border-radius:5px">
+                    <small class="form-lable"><i style="width:3%;" class="fa fa-user"></i> {{$comment->creator->name}} <a class="btn trash" style="color: red;float: right;" data-id="{{$comment->id}}">Delete</a></small>
+                    <input type="text" class="form-control" disabled value="{{$comment->comment}}">
                 </div>
                 @endif
                 @endforeach
                 <form id="commentsForm" action="javascript:void(0)" method="post">
                     @csrf
                     <div>
-                        <input type="hidden" id="created_by" name="created_by" value="{{auth()->user()->id}}">
-                        <input type="hidden" id="ticket_id" name="tickets_id" value="{{$ticket->id}}">
+                        <input type="hidden" id="ticket_id" name="tickets_id" value="">
                         <input type="text" id="comment" name="comment" class="form-control" placeholder="Comment Here" style="width:60%;display: inline-block;" value="">
                         <button type="submit" class="btn btn-info" style="margin-left: 12px">Comment</button>
                     </div>
@@ -297,15 +239,15 @@
         </div>
     </div>
 </div>
-@endforeach
-@foreach($stages as $stage)
+
 <div class="modal" id="createTicketsModel" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4>Create Tickets</h4>
-                <div class="alert alert-green" id="success_message"></div>
+                <div id="success_message"></div>
+                <div id="error_message"></div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <!-- Modal body -->
@@ -324,7 +266,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="assignee" class="form-label">Assign user:</label>
-                            <input type=" email" class="form-control" id="ticket_assignee" name="assignee">
+                            <select type=" email" class="form-control" id="ticket_assignee" name="assignee">
+                                @foreach($user_Invites as $userInvite)
+                                <option class="form-control" value="{{$userInvite->user->email}}">{{$userInvite->user->name}}</option>
+                                @endforeach
+                            </select>
                             <small class="text-danger" id="ticket_assignee_error"></small>
                         </div>
                         <div class="mb-3">
@@ -335,6 +281,5 @@
             </div>
         </div>
     </div>
-    @endforeach
 </div>
 @endsection

@@ -68,5 +68,5 @@ Route::controller(UserInviteController::class)->group(function () {
 
 Route::controller(TicketCommentsController::class)->group(function () {
     Route::post('/comments', 'store')->name('commentsStore');
-    Route::get('/comments/{id}', 'destroy')->name('commentsDelete');
+    Route::get('/comment', 'destroy')->name('commentsDelete');
 });

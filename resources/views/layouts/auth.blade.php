@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Trello </title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
@@ -146,7 +148,6 @@
                             success: function(response) {
                                 if (response) {
                                     $('#success_message').text(response.success);
-                                    $("#tickets_form").reset();
                                 }
                             },
                             error: function(response) {
@@ -158,35 +159,63 @@
                 });
             });
         </script>
-        <script type="text/javascript">
+
+        <!-- Get ticket Id -->
+
+        <script>
             $(document).on("click", ".ticketsDetailsModal", function() {
                 var myTicketId = $(this).data('id');
-                var tickets_id = $(".modal-body .my_tickets_id").text(myTicketId);
+                $("#ticketsDetailsModal").find('.ticket_id').text(myTicketId);
+            });
+        </script>
+
+        <!-- Delete Comments -->
+        <script>
+            $(document).ready(function() {
+                $(document).on('click', '.trash', function() {
+                    var commment_id = $(this).data('id');
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{route('commentsDelete')}}",
+                        data: {
+                            id: commment_id
+                        },
+                        success: function(response) {
+                            if (response) {
+                                $('#success_message').text(response.success).fadeToggle(1000);
+                                $(this).fadeOut();
+                            }
+                            $('#error_message').text(response.error).fadeToggle(1000);
+                        },
+
+                    });
+                });
             });
         </script>
 
         <!-- commments create with ajax -->
+
         <script type="text/javascript">
             $(document).ready(function() {
-                $(document).on("click", "#ticketsDetailsModal", function() {
+                $(document).on("click", ".ticketsDetailsModal", function() {
                     var myTicketId = $(this).data('id');
+                    $(".modal-body #ticket_id").val(myTicketId);
                     $('#commentsForm').on('submit', function() {
-                        var created_by = $('#created_by ').val();
-                        var tickets_id = $(".modal-body #ticket_id").val(myTicketId);
+                        var tickets_id = $(".modal-body #ticket_id").val();
                         var comment = $('#comment').val();
                         $.ajax({
                             url: "{{route('commentsStore')}}",
                             type: "POST",
                             dataType: 'json',
                             data: {
-                                created_by: created_by,
                                 tickets_id: tickets_id,
                                 comment: comment,
                                 _token: "{{ csrf_token() }}"
                             },
                             success: function(response) {
                                 if (response) {
-                                    $("#commentsForm")[0].reset();
+                                    $('#comment')[0].reset;
+                                    $('#success_message').text(response.success).fadeToggle(1000);
                                 }
                             },
                         });

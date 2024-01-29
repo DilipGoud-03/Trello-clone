@@ -7,6 +7,7 @@ use App\Models\Stage;
 use App\Models\Ticket;
 use App\Models\TicketComment;
 use App\Models\User;
+use App\Models\UserInvite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +21,7 @@ class BoardController extends Controller
         $boards = Board::where('id', $request->id)->with('stage')->first();
         $stages = $boards->stage;
         $tickets = Ticket::orderBy('stage_id', 'asc')->get();
-        $user_Invites =  DB::table('users')->select('users.name', 'user_invites.id', 'user_invites.role', 'user_invites.status', 'user_invites.invited_by')->join('user_invites', 'user_invites.user_id', '=', 'users.id')->where('user_invites.board_id', $request->id)->get();
+        $user_Invites = UserInvite::where('board_id', $request->id)->get();
         $comments = TicketComment::with('ticket')->get();
 
         return  view('trello.board', [
