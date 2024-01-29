@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TicketComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Return_;
 
 class TicketCommentsController extends Controller
 {
@@ -27,7 +30,17 @@ class TicketCommentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
+        $request->validate([
+            'comment' => 'required'
+        ]);
+        $comment = new TicketComment();
+        $comment->created_by = $request->created_by;
+        $comment->tickets_id = $request->tickets_id;
+        $comment->comment = $request->comment;
+        $comment->save();
+
+        return back();
     }
 
     /**
@@ -59,6 +72,11 @@ class TicketCommentsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $deleteComment = TicketComment::find($id)->first();
+        if (Auth::user()->id == $deleteComment->created_by) {
+            $deleteComment->delete();
+            return back()->with('success', "comment deleted");
+        }
+        return back()->with('error', "You can't delete this comment");
     }
 }

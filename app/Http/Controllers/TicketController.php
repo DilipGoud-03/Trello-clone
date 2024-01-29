@@ -6,6 +6,8 @@ use App\Models\Stage;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Expr\Cast\String_;
 
 class TicketController extends Controller
 {
@@ -27,28 +29,33 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        $assignee = User::where('email', $request->assinee)->first();
+        // dd($request->all());
         $request->validate([
             'ticketsName' => 'required',
+            'assignee' => 'required|email'
         ]);
+        $assignee = User::where('email', $request->assignee)->first();
+        if (is_null($assignee)) {
+            return back()->with('error', 'Assignee email does not exist');
+        }
         $ticket = new Ticket();
         $ticket->stage_id = $request->stage_id;
         $ticket->assignee = $assignee->id;
         $ticket->name = $request->ticketsName;
-        $ticket->description = $request->decription;
-        $ticket->created_by = $request->created_by;
+        $ticket->description = $request->description;
+        $ticket->created_by = Auth::user()->id;
         $ticket->save();
 
-        return back();
+        return response()->json([
+            'success' => 'Ticket created successfully',
+        ]);
     }
-
     /**
      * Display the specified resource.
      */
     public function show(Request $request)
     {
         $tickets = Ticket::find($request->id)->first();
-        // dd($tickets);
         return view('trello.ticketsDetails', ['tickets' => $tickets]);
     }
     /**
@@ -70,9 +77,9 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(String $id)
     {
-        $deleteTickets = Ticket::find($request->id);
+        $deleteTickets = Ticket::find($id);
         $deleteTickets->delete();
         return back();
     }

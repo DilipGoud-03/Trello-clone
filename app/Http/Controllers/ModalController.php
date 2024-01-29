@@ -16,21 +16,25 @@ class ModalController extends Controller
 {
     function modalData(Request $request)
     {
+        //dd($request->all());
+
         $request->validate([
-            'boardName' => 'required',
-            'userEmail' => 'required'
+            'board_name' => 'required',
+            'user_email' => 'required'
 
         ]);
-        $findUserId = User::where('email', $request->userEmail)->first();
-        if (is_null($findUserId->id)) {
-            return back()->with('error', 'Invalid invited user email');
+
+
+        $findUserId = User::where('email', $request->user_email)->first();
+
+        if (is_null($findUserId)) {
+            return back()->with('error', 'User email does not exist');
         }
         $board = new Board();
-        $board->name = $request->boardName;
-        $board->description = $request->baordDescription;
-        $board->created_by = $request->created_by;
+        $board->name = $request->board_name;
+        $board->description = $request->board_description;
+        $board->created_by = intval($request->created_by);
         $board->save();
-        // dd($request->userEmail);
 
         $token = Str::random(64);
         $user_invite = new UserInvite();
@@ -38,18 +42,17 @@ class ModalController extends Controller
         $user_invite->board_id = $board->id;
         $user_invite->role = $request->role;
         $user_invite->token = $token;
-        $user_invite->invited_by = $request->created_by;
+        $user_invite->invited_by = intval($request->created_by);
         $user_invite->save();
 
-        $admin = User::find($request->create_by)->first();
         $mailData = [
-            'userName' => $findUserId->name,
-            'invited_by' => $admin->name,
+            'name' => $findUserId->name,
+            'invited_by' => Auth::user()->name,
             'role' => $request->role,
-            'board' => $request->boardName,
+            'board' => $request->board_name,
             'token' => $token,
         ];
-        Mail::to($request->userEmail)->send(new SendInvitationMail($mailData));
+        Mail::to($request->user_email)->send(new SendInvitationMail($mailData));
 
         // Default stages
         // 1. Todo 
@@ -58,7 +61,7 @@ class ModalController extends Controller
         $stage->name = 'Todo';
         $stage->sequence = '1';
         $stage->is_default = '1';
-        $stage->created_by = $request->created_by;
+        $stage->created_by = intval($request->created_by);
         $stage->save();
 
         // 2. In Progress
@@ -67,7 +70,7 @@ class ModalController extends Controller
         $stage->name = 'In Progress';
         $stage->sequence = '2';
         $stage->is_default = '1';
-        $stage->created_by = $request->created_by;
+        $stage->created_by = intval($request->created_by);
         $stage->save();
 
         // 3. Review
@@ -76,7 +79,7 @@ class ModalController extends Controller
         $stage->name = 'Review';
         $stage->sequence = '3';
         $stage->is_default = '1';
-        $stage->created_by = $request->created_by;
+        $stage->created_by = intval($request->created_by);
         $stage->save();
 
         // 4. Done
@@ -85,20 +88,23 @@ class ModalController extends Controller
         $stage->name = 'Done';
         $stage->sequence = '4';
         $stage->is_default = '1';
-        $stage->created_by = $request->created_by;
+        $stage->created_by = intval($request->created_by);
         $stage->save();
 
-        // 5. Costom stages
+        // 5. Custom stages
         $stageSequence = Stage::where('board_id', $board->id)->get();
-        if (!empty($request->stageName)) {
+        if (!empty($request->stage_name)) {
             $stage = new Stage();
             $stage->board_id = $board->id;
-            $stage->name = $request->stageName;
+            $stage->name = $request->stage_name;
             $stage->sequence = count($stageSequence) + 1;
             $stage->is_default = '0';
-            $stage->created_by = $request->created_by;
+            $stage->created_by = intval($request->created_by);
             $stage->save();
         }
-        return back();
+        return response()->json([
+            'success' => 'Data is successfully submitted!',
+            'alert-type' => 'success'
+        ]);
     }
 }

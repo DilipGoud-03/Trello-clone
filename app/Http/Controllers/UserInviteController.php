@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Mail\SendInvitationMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class UserInviteController extends Controller
 {
@@ -30,28 +31,31 @@ class UserInviteController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate(
             ['email' => 'required']
         );
-        $user_id = User::where('email', $request->email)->first();
-        $token = Str::random(64);
-        $invite_user = new UserInvite();
-        $invite_user->user_id = $user_id->id;
-        $invite_user->board_id = $request->board_id;
-        $invite_user->role = $request->role;
-        $invite_user->invited_by = $request->invited_by;
-        $invite_user->save();
+        $user = User::where('email', $request->email)->first();
+        if (is_null($user)) {
+            return back()->with('error', ' Email address does not exist');
+        }
 
-        $admin = User::find($request->create_by)->first();
+        $token = Str::random(64);
+        $user_invite = new UserInvite();
+        $user_invite->user_id = $user->id;
+        $user_invite->board_id = $request->board_id;
+        $user_invite->role = $request->role;
+        $user_invite->token = $token;
+        $user_invite->invited_by = Auth::user()->id;
+        $user_invite->save();
+
         $mailData = [
-            'userName' => $user_id->name,
-            'invited_by' => $admin->name,
+            'name' => $user->name,
+            'invited_by' => Auth::user()->name,
             'role' => $request->role,
             'board' => $request->boardName,
             'token' => $token,
         ];
-        Mail::to($request->userEmail)->send(new SendInvitationMail($mailData));
+        Mail::to($request->email)->send(new SendInvitationMail($mailData));
 
         return back();
     }
@@ -77,20 +81,52 @@ class UserInviteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        dd($request->id);
+        // dd($request->id);
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request)
     {
-        // dd($request->id);
         $userDelete = UserInvite::find($request->id);
         if ($userDelete) {
             $userDelete->delete();
             return back();
         }
         return back();
+    }
+
+    /**
+     * Invitation Accept .
+     */
+    public function userAcceptInvitation($token)
+    {
+        $verifyUser = UserInvite::where('token', $token)->first();
+        $message = 'Your Invitation has been deleted.';
+        if (!is_null($verifyUser)) {
+            UserInvite::where('token', $token)->update([
+                'status' => 'Accepted',
+                'token' => 'verify'
+            ]);
+            $message = 'You Accept Invitation';
+        }
+        return redirect()->route('login')->with('message', $message);
+    }
+    /**
+     * Invitation Reject.
+     */
+    public function userRejectInvitation($token)
+    {
+        $verifyUser = UserInvite::where('token', $token)->first();
+        $message = 'Your Invitation has been deleted.';
+        if (!is_null($verifyUser)) {
+            UserInvite::where('token', $token)->update([
+                'status' => 'Rejected',
+                'token' => 'verify'
+            ]);
+            $message = 'You Reject Invitation';
+        }
+
+        return redirect()->route('login')->with('message', $message);
     }
 }

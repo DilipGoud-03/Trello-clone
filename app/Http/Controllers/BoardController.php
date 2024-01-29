@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Board;
+use App\Models\Stage;
 use App\Models\Ticket;
+use App\Models\TicketComment;
 use App\Models\User;
-use App\Models\UserInvite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BoardController extends Controller
 {
@@ -17,18 +19,16 @@ class BoardController extends Controller
     {
         $boards = Board::where('id', $request->id)->with('stage')->first();
         $stages = $boards->stage;
+        $tickets = Ticket::orderBy('stage_id', 'asc')->get();
+        $user_Invites =  DB::table('users')->select('users.name', 'user_invites.id', 'user_invites.role', 'user_invites.status', 'user_invites.invited_by')->join('user_invites', 'user_invites.user_id', '=', 'users.id')->where('user_invites.board_id', $request->id)->get();
+        $comments = TicketComment::with('ticket')->get();
 
-        $user_Invites = UserInvite::where('board_id', $request->id)->with('user')->get();
-        // $admins = UserInvite::where('board_id', $request->id)->with('invited_by')->get();
-        // dd($userInvites);
-        // dd($admins->invited_by->name);
-        $tickets = Ticket::with('stage')->get();
-        return view('trello.board', [
+        return  view('trello.board', [
             'boards' => $boards,
             'stages' => $stages,
             'tickets' => $tickets,
             'user_Invites' => $user_Invites,
-            // 'admins' => $admins
+            'comments' => $comments
         ]);
     }
     /**
@@ -43,6 +43,50 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
+
+        $board = new Board();
+        $board->name = $request->boardName;
+        $board->description = $request->description;
+        $board->created_by = $request->created_By;
+        $board->save();
+        // Default stages
+        // 1. Todo 
+        $stage = new Stage();
+        $stage->board_id = $board->id;
+        $stage->name = 'Todo';
+        $stage->sequence = '1';
+        $stage->is_default = '1';
+        $stage->created_by = intval($request->created_By);
+        $stage->save();
+
+        // 2. In Progress
+        $stage = new Stage();
+        $stage->board_id = $board->id;
+        $stage->name = 'In Progress';
+        $stage->sequence = '2';
+        $stage->is_default = '1';
+        $stage->created_by = intval($request->created_By);
+        $stage->save();
+
+        // 3. Review
+        $stage = new Stage();
+        $stage->board_id = $board->id;
+        $stage->name = 'Review';
+        $stage->sequence = '3';
+        $stage->is_default = '1';
+        $stage->created_by = intval($request->created_By);
+        $stage->save();
+
+        // 4. Done
+        $stage = new Stage();
+        $stage->board_id = $board->id;
+        $stage->name = 'Done';
+        $stage->sequence = '4';
+        $stage->is_default = '1';
+        $stage->created_by = intval($request->created_By);
+        $stage->save();
+
+        return back();
     }
     /**
      * Display the specified resource.
@@ -66,7 +110,6 @@ class BoardController extends Controller
     public function update(Request $request, string $id)
     {
     }
-
     /**
      * Remove the specified resource from storage.
      */

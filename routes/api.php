@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ModalController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
-use App\Models\Board;
+use App\Http\Controllers\StageController;
+use App\Http\Controllers\UserInviteController;
+use App\Http\Controllers\TicketCommentsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,18 +25,38 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+// Route::post('/modalData', [ModalController::class, 'modalData'])->name('modalData');
 
-Route::post('/register', [UserController::class, 'store'])->name('store');
+// Route::controller(UserController::class)->group(function () {
+//     Route::post('/store', 'store')->name('store');
+// });
 
-Route::get('/login', [LoginController::class, 'loginRequest'])->name('loginRequest');
+// Route::controller(LoginController::class)->group(function () {
+//     Route::post('/loginRequest', 'loginRequest')->name('loginRequest');
+// });
 
-Route::controller(BoardController::class)->group(function () {
-    Route::post('board', 'store')->name('storeBoard');
-    Route::put('/board/{id}', 'update')->name('updateBoard');
-});
-Route::controller(TicketController::class)->group(function () {
-    Route::post('/ticket/{id}', 'show')->name('showTicket');
-    Route::post('/ticket', 'store')->name('ticketsStore');
-    Route::put('/ticket/{id}', 'update')->name('updateTicket');
-    Route::delete('/ticket/{id}', 'destroy')->name('deleteTicket');
-});
+// Route::controller(BoardController::class)->group(function () {
+
+//     Route::post('/board', 'store')->name('boardStore');
+//     Route::delete('/deleteBoard/{id}', 'destroy')->name('deleteBoard');
+// });
+
+// Route::controller(StageController::class)->group(function () {
+//     Route::post('/stage', 'store')->name('stageStore');
+//     Route::post('/stage_order_change', 'stage_order_change')->name('stage_order_change');
+//     Route::delete('/stage/{id}', 'destroy')->name('stageDelete');
+// });
+
+// Route::controller(TicketController::class)->group(function () {
+//     Route::post('/tickets', 'store')->name('ticketsStore');
+//     Route::delete('/ticket/{id}', 'destroy')->name('deleteTicket');
+// });
+// Route::controller(UserInviteController::class)->group(function () {
+//     Route::post('/inviteUser', 'store')->name('inviteUser');
+//     Route::delete('/deleteUser/{id}', 'destroy')->name('deleteUser');
+// });
+
+// Route::controller(TicketCommentsController::class)->group(function () {
+//     Route::post('/comments', 'store')->name('commentsStore');
+//     Route::get('/comments/{id}', 'destroy')->name('commentsDelete');
+// });

@@ -15,7 +15,6 @@ class Board extends Model
         'name',
         'description'
     ];
-
     // Relationships
     public function creator()
     {
@@ -28,6 +27,6 @@ class Board extends Model
     }
     public function stage()
     {
-        return $this->hasMany(Stage::class);
+        return $this->hasMany(Stage::class)->orderBy('sequence', 'asc');
     }
 }
