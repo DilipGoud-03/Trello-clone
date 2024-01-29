@@ -19,11 +19,11 @@ class BoardController extends Controller
     {
         $boards = Board::where('id', $request->id)->with('stage')->first();
         $stages = $boards->stage;
-        $tickets = Ticket::with('stage')->get();
+        $tickets = Ticket::orderBy('stage_id', 'asc')->get();
         $user_Invites =  DB::table('users')->select('users.name', 'user_invites.id', 'user_invites.role', 'user_invites.status', 'user_invites.invited_by')->join('user_invites', 'user_invites.user_id', '=', 'users.id')->where('user_invites.board_id', $request->id)->get();
         $comments = TicketComment::with('ticket')->get();
 
-        return view('trello.board', [
+        return  view('trello.board', [
             'boards' => $boards,
             'stages' => $stages,
             'tickets' => $tickets,

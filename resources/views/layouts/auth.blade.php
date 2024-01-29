@@ -4,93 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Trello </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <style>
-        #container {
-            max-width: 550px;
-        }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
-        .step-container {
-            position: relative;
-            text-align: center;
-            transform: translateY(-43%);
-        }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        .step-circle {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #fff;
-            border: 2px solid #007bff;
-            line-height: 30px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            cursor: pointer;
-            /* Added cursor pointer */
-        }
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 
-        .step-line {
-            position: absolute;
-            top: 16px;
-            left: 50px;
-            width: calc(100% - 100px);
-            height: 2px;
-            background-color: #007bff;
-            z-index: -1;
-        }
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-        #multi-step-form {
-            overflow-x: hidden;
-        }
+    <link rel="stylesheet" href="{{asset('css/modal.css')}}">
+    <link rel="stylesheet" href="{{asset('css/stages-drag-drop.css')}}">
+    <link rel="stylesheet" href="{{asset('css/drag-drop.css')}}">
+    <link rel="stylesheet" href="{{asset('css/tickets-drag-drop.css')}}">
 
-        .modal:nth-of-type(even) {
-            z-index: 1052 !important;
-        }
 
-        .modal-backdrop.show:nth-of-type(even) {
-            z-index: 1051 !important;
-        }
-    </style>
-    <script>
-        var currentStep = 1;
-        $(document).ready(function() {
-            $('#mymodal').on('hidden.bs.modal', function() {
-                this.modal('show');
-            });
-            $('#multi-step-form').find('.step').slice(1).hide();
-
-            $(".next-step").click(function() {
-                if (currentStep < 3) {
-                    $(".step-" + currentStep).addClass("animate__animated animate__fadeOutLeft");
-                    currentStep++;
-                    setTimeout(function() {
-                        $(".step").removeClass("animate__animated animate__fadeOutLeft").hide();
-                        $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInRight");
-                    }, 500);
-                }
-            });
-            $(".prev-step").click(function() {
-                if (currentStep > 1) {
-                    $(".step-" + currentStep).addClass("animate__animated animate__fadeOutRight");
-                    currentStep--;
-                    setTimeout(function() {
-                        $(".step").removeClass("animate__animated animate__fadeOutRight").hide();
-                        $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInLeft");
-                    }, 500);
-                }
-            });
-        });
-    </script>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
         <div class="container ">
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ">
@@ -129,6 +67,182 @@
     </nav>
     <main class="mt-3">
         @yield('content')
+        <script src="{{asset('js/modal.js')}}"></script>
+
+        <!-- Change stage order with ajax -->
+
+        <script>
+            $(document).ready(function() {
+                $("#stage_sortable").sortable({
+                    placeholder: "ui-state-highlight",
+                    update: function(event, ui) {
+
+                        var stage_order_ids = new Array();
+                        $('#stage_sortable li').each(function() {
+                            stage_order_ids.push($(this).data("id"));
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: "{{route('stage_order_change')}}",
+                            dataType: "json",
+                            data: {
+                                order: stage_order_ids,
+                                _token: "{{ csrf_token() }}"
+                            },
+                        });
+                    }
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#stage_sortable").sortable({
+                    placeholder: "ui-state-highlight",
+                    update: function(event, ui) {
+
+                        var stage_order_ids = new Array();
+                        $('#stage_sortable li').each(function() {
+                            stage_order_ids.push($(this).data("id"));
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: "{{route('stage_order_change')}}",
+                            dataType: "json",
+                            data: {
+                                order: stage_order_ids,
+                                _token: "{{ csrf_token() }}"
+                            },
+                        });
+                    }
+                });
+            });
+        </script>
+
+        <!-- create tickets with ajax -->
+        <script>
+            $(document).ready(function() {
+                $(document).on("click", ".createTicketsModel", function() {
+                    var stage_id = $(this).data('id');
+                    $('#tickets_form').on('submit', function() {
+                        $('#ticketsName_error').text('');
+                        $('#ticket_assignee_error').text('');
+
+                        var myStageId = stage_id;
+                        var ticketsName = $('#ticketsName').val();
+                        var ticket_description = $('#ticket_description').val();
+                        var ticket_assignee = $('#ticket_assignee').val();
+
+                        $.ajax({
+                            url: "{{route('ticketsStore')}}",
+                            type: "POST",
+                            dataType: 'json',
+                            data: {
+                                stage_id: myStageId,
+                                ticketsName: ticketsName,
+                                assignee: ticket_assignee,
+                                description: ticket_description,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response) {
+                                if (response) {
+                                    $('#success_message').text(response.success);
+                                    $("#tickets_form").reset();
+                                }
+                            },
+                            error: function(response) {
+                                $('#ticketsName_error').text(response.responseJSON.errors.ticketsName);
+                                $('#ticket_assignee_error').text(response.responseJSON.errors.assignee);
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).on("click", ".ticketsDetailsModal", function() {
+                var myTicketId = $(this).data('id');
+                var tickets_id = $(".modal-body .my_tickets_id").text(myTicketId);
+            });
+        </script>
+
+        <!-- commments create with ajax -->
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $(document).on("click", "#ticketsDetailsModal", function() {
+                    var myTicketId = $(this).data('id');
+                    $('#commentsForm').on('submit', function() {
+                        var created_by = $('#created_by ').val();
+                        var tickets_id = $(".modal-body #ticket_id").val(myTicketId);
+                        var comment = $('#comment').val();
+                        alert(tickets_id);
+                        $.ajax({
+                            url: "{{route('commentsStore')}}",
+                            type: "POST",
+                            dataType: 'json',
+                            data: {
+                                created_by: created_by,
+                                tickets_id: tickets_id,
+                                comment: comment,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response) {
+                                if (response) {
+                                    $("#commentsForm")[0].reset();
+                                }
+                            },
+                        });
+                    });
+                });
+            });
+        </script>
+
+        <!-- create board with Ajax -->
+
+        <script type="text/javascript">
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(document).ready(function() {
+                $('#multi_step_form').on('submit', function() {
+                    $('#board_name_error').text('');
+                    $('#user_email_error').text('');
+
+                    var created_by = $('#created_by ').val();
+                    var board_name = $('#board_name ').val();
+                    var board_description = $('#board_description').val();
+                    var user_email = $('#user_email').val();
+                    var role = $('#role').val();
+                    var stage_name = $('#stage_name').val();
+                    var stage_description = $('#stage_description').val();
+                    $.ajax({
+                        url: "{{route('modalData')}}",
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                            created_by: created_by,
+                            board_name: board_name,
+                            board_description: board_description,
+                            user_email: user_email,
+                            role: role,
+                            stage_name: stage_name,
+                            stage_description: stage_description,
+                        },
+                        success: function(response) {
+                            if (response) {
+                                $('#success-message').text(response.success);
+                                $("#multi_step_form")[0].reset();
+                            }
+                        },
+                        error: function(response) {
+                            $('#board_name_error').text(response.responseJSON.errors.board_name);
+                            $('#user_email_error').text(response.responseJSON.errors.user_email);
+                        }
+                    });
+                });
+            });
+        </script>
     </main>
 </body>
 

@@ -29,10 +29,15 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        $assignee = User::where('email', $request->assignee)->first();
+        // dd($request->all());
         $request->validate([
             'ticketsName' => 'required',
+            'assignee' => 'required|email'
         ]);
+        $assignee = User::where('email', $request->assignee)->first();
+        if (is_null($assignee)) {
+            return back()->with('error', 'Assignee email does not exist');
+        }
         $ticket = new Ticket();
         $ticket->stage_id = $request->stage_id;
         $ticket->assignee = $assignee->id;
@@ -41,7 +46,9 @@ class TicketController extends Controller
         $ticket->created_by = Auth::user()->id;
         $ticket->save();
 
-        return back();
+        return response()->json([
+            'success' => 'Ticket created successfully',
+        ]);
     }
     /**
      * Display the specified resource.

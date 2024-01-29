@@ -48,6 +48,8 @@ Route::controller(BoardController::class)->group(function () {
 
 Route::controller(StageController::class)->group(function () {
     Route::post('/stage', 'store')->name('stageStore');
+    Route::get('/home', 'index')->name('stage_listing');
+    Route::post('/stage_order_change', 'stage_order_change')->name('stage_order_change');
     Route::get('/stage/{id}', 'destroy')->name('stageDelete');
 });
 
